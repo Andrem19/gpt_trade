@@ -42,7 +42,7 @@ func ReadAndConv(path string) {
 	
     for sc.Scan() {
         line := sc.Text()  // GET the line string
-		variables.ListToSave = append(variables.ListToSave, ConvLine(line))
+		variables.ListOHLC = append(variables.ListOHLC, ConvLine(line))
     }
     if err := sc.Err(); err != nil {
         log.Fatalf("scan file error: %v", err)

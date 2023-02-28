@@ -23,7 +23,7 @@ func ReadFileToTheModel() {
 	
     for sc.Scan() {
         line := sc.Text()  // GET the line string
-		variables.ListToSave = append(variables.ListToSave, ConvLine(line))
+		variables.ListOHLC = append(variables.ListOHLC, ConvLine(line))
     }
     if err := sc.Err(); err != nil {
         log.Fatalf("scan file error: %v", err)
@@ -32,17 +32,17 @@ func ReadFileToTheModel() {
 
 func PrepareTrainingData() {
 
-	for i := 0; i < len(variables.ListToSave); i+=24 {
+	for i := 0; i < len(variables.ListOHLC); i+=24 {
 		var set variables.Set_t
 		var sb strings.Builder
 		for j := i; j < i+18; j++ {
-			ohlc := variables.ListToSave[j]
+			ohlc := variables.ListOHLC[j]
 			sb.WriteString(ohlc.ToString())
 		}
 		set.Prompt = sb.String()
 		sb.Reset()
 		for j := i+18; j < i+24; j++ {
-			ohlc := variables.ListToSave[j]
+			ohlc := variables.ListOHLC[j]
 			sb.WriteString(ohlc.ToString())
 		}
 		set.Completion = sb.String()

@@ -2,13 +2,15 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/Andrem19/gpt_trade/util"
 	"github.com/Andrem19/gpt_trade/variables"
 )
 
 func main() {
+	conf, err := util.LoadConfig(".")
+	util.Check_Err(err)
+
 	if variables.Mode == "PrepTrain" {
 		util.ReadFileToTheModel()
 		util.PrepareTrainingData()
@@ -17,11 +19,21 @@ func main() {
 	} else if variables.Mode == "PrepNewData" {
 		filesList := util.GetFilesList(variables.Path)
 		RangeFilesWorker(filesList)
-		err := util.SaveToFile(variables.ListToSave, variables.OutputFileName)
-		if err != nil {
-			log.Fatal(err)
-		}
+		err := util.SaveToFile(variables.ListOHLC, variables.OutputFileName)
+		util.Check_Err(err)
+
 		fmt.Println("File successfuly writen")
+	} else if variables.Mode == "Check" {
+		util.PrepCheckData()
+		for i := 0; i < 10; i++ {
+			resp, err := util.AskQuestion(variables.ListCheck[i].Prompt, conf.OPENAI_API_KEY)
+			util.Check_Err(err)
+			body := variables.Check_data_to_save{
+				Resp: resp,
+				Check: variables.ListCheck[i].Check,
+			}
+			util.SaveFile("reults.txt", body.ToString())
+		}
 	}
 }
 
@@ -29,6 +41,7 @@ func RangeFilesWorker(filesList []string) {
 	for _, file := range filesList {
         path := fmt.Sprintf("%s/%s", variables.Path, file)
 		util.ReadAndConv(path)
-		fmt.Printf("%s readed and save to list. The lenth of list is %d\n\n", file, len(variables.ListToSave))
+		fmt.Printf("%s readed and save to list. The lenth of list is %d\n\n", file, len(variables.ListOHLC))
     }
 }
+
