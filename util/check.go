@@ -14,6 +14,7 @@ func PrepCheckData() {
 	for i := 0; i < len(variables.ListOHLC); i+=24 {
 		var set variables.Check_data
 		var sb strings.Builder
+		sb.WriteString("Imagine that you are a trader and you need to give a price prediction based on these historical data:\n")
 		for j := i; j < i+18; j++ {
 			ohlc := variables.ListOHLC[j]
 			sb.WriteString(ohlc.ToString())

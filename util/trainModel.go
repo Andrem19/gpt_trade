@@ -14,25 +14,25 @@ import (
 
 func ReadFileToTheModel() {
 	f, err := os.OpenFile(variables.OutputFileName, os.O_RDONLY, os.ModePerm)
-    if err != nil {
-        log.Fatalf("open file error: %v", err)
-    }
-    defer f.Close()
+	if err != nil {
+		log.Fatalf("open file error: %v", err)
+	}
+	defer f.Close()
 
-    sc := bufio.NewScanner(f)
-	
-    for sc.Scan() {
-        line := sc.Text()  // GET the line string
+	sc := bufio.NewScanner(f)
+
+	for sc.Scan() {
+		line := sc.Text() // GET the line string
 		variables.ListOHLC = append(variables.ListOHLC, ConvLine(line))
-    }
-    if err := sc.Err(); err != nil {
-        log.Fatalf("scan file error: %v", err)
-    }
+	}
+	if err := sc.Err(); err != nil {
+		log.Fatalf("scan file error: %v", err)
+	}
 }
 
 func PrepareTrainingData() {
 
-	for i := 0; i < len(variables.ListOHLC); i+=24 {
+	for i := 0; i < len(variables.ListOHLC); i += 24 {
 		var set variables.Set_t
 		var sb strings.Builder
 		for j := i; j < i+18; j++ {
@@ -41,7 +41,7 @@ func PrepareTrainingData() {
 		}
 		set.Prompt = sb.String()
 		sb.Reset()
-		for j := i+18; j < i+24; j++ {
+		for j := i + 18; j < i+24; j++ {
 			ohlc := variables.ListOHLC[j]
 			sb.WriteString(ohlc.ToString())
 		}
@@ -56,9 +56,9 @@ func SaveTrainingData(fileName string) error {
 		fmt.Println("File not exist")
 	} else {
 		e := os.Remove(fileName)
-    	if e != nil {
-        	log.Fatal(e)
-    	}
+		if e != nil {
+			log.Fatal(e)
+		}
 		fmt.Println("File removed")
 	}
 
@@ -68,8 +68,6 @@ func SaveTrainingData(fileName string) error {
 	}
 
 	defer f.Close()
-
-
 
 	for _, set := range variables.ListTrain {
 		bt, _ := json.Marshal(set)

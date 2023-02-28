@@ -31,5 +31,5 @@ func (resp *Check_data_to_save) ToString() string {
 }
 
 func (ohlc *OHLC) ToString() string {
-	return fmt.Sprintf("%s,%.2f,%.2f,%.2f,%.2f,%.2f\n", ohlc.Time, ohlc.Open, ohlc.High, ohlc.Low, ohlc.Close, ohlc.Volume)
+	return fmt.Sprintf("%.2f,%.2f,%.2f,%.2f,%.2f\n", ohlc.Open, ohlc.High, ohlc.Low, ohlc.Close, ohlc.Volume)
 }

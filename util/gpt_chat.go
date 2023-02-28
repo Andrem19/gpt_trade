@@ -24,6 +24,11 @@ type Data struct {
 type RequestBody struct {
 	Model            string  `json:"model"`
 	Prompt           string  `json:"prompt"`
+	Temperature      float64 `json:"temperature"`
+	MaxTokens        int64   `json:"max_tokens"`
+	TopP             float64 `json:"top_p"`
+	FrequencyPenalty float64 `json:"frequency_penalty"`
+	PresencePenalty  float64 `json:"presence_penalty"`
 }
 
 type TextCompletionChoice struct {
@@ -47,13 +52,18 @@ func AskQuestion(question string, gpt_token string) (string, error) {
 	requestBody := RequestBody{
 		Model:            variables.FineTuneModel,
 		Prompt:           question,
+		Temperature:      0.7,
+		MaxTokens:        3000,
+		TopP:             1,
+		FrequencyPenalty: 0,
+		PresencePenalty:  0,
 	}
 
 	body, err := json.Marshal(requestBody)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Send to bot: ", body)
+	fmt.Println("Send to bot: ", question)
 	req, err := http.NewRequest("POST", "https://api.openai.com/v1/completions", bytes.NewBuffer(body))
 	if err != nil {
 		fmt.Println(err, req)
