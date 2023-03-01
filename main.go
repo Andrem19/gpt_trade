@@ -45,6 +45,19 @@ func main() {
 			}
 			util.SaveFile("reults.txt", body.ToString())
 		}
+	} else if variables.Mode == "Check_bin" {
+		util.PrepCheckBinData()
+		fmt.Println("Lenth checklist: ", len(variables.ListCheck))
+		for i := 0; i < len(variables.ListCheck); i++ {
+			resp, err := util.AskQuestion(variables.ListCheck[i].Prompt, conf.OPENAI_API_KEY)
+			time.Sleep(8 * time.Second)
+			util.Check_Err(err)
+			body := variables.Check_data_to_save{
+				Resp: resp,
+				Check: variables.ListCheck[i].Check,
+			}
+			util.SaveFile("reults.txt", body.ToString())
+		}
 	}
 }
 
